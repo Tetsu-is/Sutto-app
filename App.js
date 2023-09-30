@@ -1,19 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { Button, Overlay, CheckBox, Card } from 'react-native-elements';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function App() {
   const [alarms, setAlarms] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [time, setTime] = useState(new Date());
+  const [days, setDays] = useState({
+    Mon: false,
+    Tue: false,
+    Wed: false,
+    Thu: false,
+    Fri: false,
+    Sat: false,
+    Sun: false,
+  });
+
   const toggleOverlay = () => {
     setVisible(!visible);
   };
+
+  const addAlarm = () => {
+    setAlarms([...alarms, { time, days }]);
+    toggleOverlay();
+  };
+
+  const onTimeChange = (e, selectedTime) => {
+    setTime(selectedTime || time);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>やったぜー！</Text>
-      <StatusBar style="auto" />
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <FlatList
         data={alarms}
@@ -33,16 +50,23 @@ export default function App() {
       />
       <Button title="アラーム設定" onPress={toggleOverlay} containerStyle={{ marginBottom: 30 }} />
       <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+        <View>
+          <DateTimePicker
+            value={time}
+            mode="time"
+            onChange={onTimeChange}
+          />
+          {Object.keys(days).map((day, index) => (
+            <CheckBox
+              key={index}
+              title={day}
+              checked={days[day]}
+              onPress={() => setDays({ ...days, [day]: !days[day] })}
+            />
+          ))}
+          <Button title="設定" onPress={addAlarm} />
+        </View>
       </Overlay>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
