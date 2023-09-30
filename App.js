@@ -2,9 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { View, FlatList, Text } from 'react-native';
+import { Button, Overlay, CheckBox, Card } from 'react-native-elements';
 
 export default function App() {
   const [alarms, setAlarms] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
   return (
     <View style={styles.container}>
       <Text>やったぜー！</Text>
@@ -26,6 +31,9 @@ export default function App() {
           </Card>
         )}
       />
+      <Button title="アラーム設定" onPress={toggleOverlay} containerStyle={{ marginBottom: 30 }} />
+      <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+      </Overlay>
     </View>
   );
 }
