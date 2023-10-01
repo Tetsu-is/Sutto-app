@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { Button, Overlay, CheckBox, Card } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AlarmSettingOverlay from './components/AlarmSettingOverlay';
 
 export default function App() {
   const [alarms, setAlarms] = useState([]);
@@ -49,24 +50,15 @@ export default function App() {
         )}
       />
       <Button title="アラーム設定" onPress={toggleOverlay} containerStyle={{ marginBottom: 30 }} />
-      <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
-        <View>
-          <DateTimePicker
-            value={time}
-            mode="time"
-            onChange={onTimeChange}
-          />
-          {Object.keys(days).map((day, index) => (
-            <CheckBox
-              key={index}
-              title={day}
-              checked={days[day]}
-              onPress={() => setDays({ ...days, [day]: !days[day] })}
-            />
-          ))}
-          <Button title="設定" onPress={addAlarm} />
-        </View>
-      </Overlay>
+      <AlarmSettingOverlay
+        visible={visible}
+        toggleOverlay={toggleOverlay}
+        addAlarm={addAlarm}
+        time={time}
+        onTimeChange={onTimeChange}
+        days={days}
+        setDays={setDays}
+      />
     </View>
   );
 }
